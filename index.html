@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Will You Be My Valentine, Maitri? 💖</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 99%, #fad0c4 100%);
+      color: #fff;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 3.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 3px 3px 10px rgba(0,0,0,0.3);
+      animation: float 3s ease-in-out infinite;
+      text-align: center;
+      padding: 0 1rem;
+    }
+    .buttons {
+      position: relative;
+      margin-top: 2rem;
+      height: 80px;
+      width: 360px;
+    }
+    button {
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+      white-space: nowrap;
+    }
+    #yesBtn {
+      background: #ff4757;
+      color: white;
+      margin-right: 20px;
+      position: absolute;
+      left: 20px;
+      top: 10px;
+    }
+    #yesBtn:hover {
+      transform: scale(1.05);
+      background: #ff6b81;
+    }
+    #noBtn {
+      background: #57606f;
+      color: white;
+      position: absolute;
+      right: 20px;
+      top: 10px;
+    }
+    #noBtn:hover {
+      background: #2f3542;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-15px); }
+    }
+    .heart {
+      position: absolute;
+      font-size: 2rem;
+      animation: drift 10s linear infinite;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+    @keyframes drift {
+      0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+      10% { opacity: 0.9 }
+      100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
+    }
+    .overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.4);
+      color: #fff;
+      font-size: 2rem;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Maitri, will you be my Valentine? 💕</h1>
+
+  <div class="buttons">
+    <button id="yesBtn">Yes 😍</button>
+    <button id="noBtn">No 😢</button>
+  </div>
+
+  <script>
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    let clickCount = 0;
+    const shyMessages = [
+      "No seems a bit shy 😈",
+      "Hey Maitri, don't run away! 🏃‍♀️",
+      "Are you sure, Maitri? 🥺",
+      "Catch me if you can! 😏",
+      "No is hiding from you... 👀",
+      "Please Maitri? 🫶",
+      "Bar raised too high? 😂"
+    ];
+
+    // Make "No" button run away on hover
+    noBtn.addEventListener('mouseover', () => {
+      const padding = 20;
+      const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - padding*2) + padding;
+      const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - padding*2) + padding;
+      noBtn.style.left = x + 'px';
+      noBtn.style.top = y + 'px';
+      noBtn.style.position = 'fixed'; // detach after first move
+
+      // Randomly change text to tease
+      if (Math.random() > 0.6) {
+        noBtn.textContent = shyMessages[Math.floor(Math.random() * shyMessages.length)];
+      }
+    });
+
+    // Clicking No → more teasing
+    noBtn.addEventListener('click', () => {
+      clickCount++;
+      if (clickCount < 7) {
+        noBtn.textContent = shyMessages[clickCount % shyMessages.length];
+        yesBtn.style.transform = `scale(${1 + clickCount * 0.08})`;
+        setTimeout(() => yesBtn.style.transform = 'scale(1)', 500);
+      } else {
+        noBtn.textContent = "Okay, maybe later... 😅";
+      }
+      burstHearts(6);
+    });
+
+    // Yes click — celebrate!
+    yesBtn.addEventListener('click', () => {
+      celebrate();
+    });
+
+    function createFloatingHeart(left, size, delay) {
+      const heart = document.createElement('div');
+      heart.className = 'heart';
+      heart.textContent = '💖';
+      heart.style.left = left + 'px';
+      heart.style.fontSize = size + 'px';
+      heart.style.animationDelay = delay + 's';
+      heart.style.zIndex = 50;
+      document.body.appendChild(heart);
+      setTimeout(() => heart.remove(), 12000);
+    }
+
+    // occasional drifting hearts
+    setInterval(() => {
+      const left = Math.random() * window.innerWidth;
+      const size = 18 + Math.random() * 36;
+      const delay = Math.random() * 2;
+      createFloatingHeart(left, size, delay);
+    }, 800);
+
+    function burstHearts(n) {
+      for (let i = 0; i < n; i++) {
+        setTimeout(() => {
+          const left = Math.random() * window.innerWidth;
+          const size = 18 + Math.random() * 36;
+          const delay = Math.random() * 0.2;
+          createFloatingHeart(left, size, delay);
+        }, i * 80);
+      }
+    }
+
+    function celebrate() {
+      // replace content with a celebration overlay
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      overlay.innerHTML = `<div>Yay! 🎉</div><div>Maitri said YES! 💕</div><div style="font-size:1rem">Refresh to see again</div>`;
+      document.body.appendChild(overlay);
+
+      // make lots of hearts
+      for (let i = 0; i < 60; i++) {
+        setTimeout(() => {
+          const left = Math.random() * window.innerWidth;
+          const size = 16 + Math.random() * 40;
+          createFloatingHeart(left, size, 0);
+        }, i * 60);
+      }
+
+      // play a small confetti sound if user interacted (optional)
+    }
+  </script>
+
+</body>
+</html>
